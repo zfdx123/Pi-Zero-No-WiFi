@@ -19,7 +19,7 @@ on:
 
 env:
   REPO_URL: https://github.com/openwrt/openwrt
-  REPO_BRANCH: v24.10.2
+  REPO_BRANCH: main
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: .config
   DIY_P1_SH: diy-part1.sh
@@ -115,9 +115,7 @@ jobs:
       id: compile
       run: |
         cd openwrt
-        # Fix Bug
-        echo "# CONFIG_REALTEK_PHY_HWMON is not set" >> target/linux/sunxi/config-6.6
-        make -j4 V=s
+        make -j8 V=s
         echo "status=success" >> $GITHUB_OUTPUT
         grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > DEVICE_NAME
         [ -s DEVICE_NAME ] && echo "DEVICE_NAME=_$(cat DEVICE_NAME)" >> $GITHUB_ENV
